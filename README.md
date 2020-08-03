@@ -63,7 +63,7 @@ import { useWyre } from "react-native-wyre";
 
 const { wyre } = useWyre();
 
-const {data} = await(
+const {data} = await wyre(
   {
     url: "v3/rates",
     method: "get",
