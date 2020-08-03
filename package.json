@@ -20,6 +20,7 @@
   "scripts": {
     "build": "babel src --plugins @babel/plugin-transform-typescript --extensions '.ts,.tsx' --out-dir dist",
     "prettify": "yarn prettier --write '**/*.tsx|**/*.ts'",
+    "lint": "eslint --fix --ext .ts,.tsx ./src",
     "test": "jest"
   },
   "peerDependencies": {
@@ -35,6 +36,14 @@
     "@babel/preset-env": "^7.11.0",
     "@babel/preset-react": "^7.10.4",
     "@babel/preset-typescript": "^7.10.4",
+    "@typescript-eslint/eslint-plugin": "^3.8.0",
+    "@typescript-eslint/parser": "^3.8.0",
+    "eslint": "^7.6.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-react": "^7.20.5",
+    "eslint-plugin-react-hooks": "^4.0.8",
     "husky": "^4.2.5",
     "jest": "^26.2.2",
     "leasot": "^11.1.0",
