@@ -1,14 +1,14 @@
 # react-use-wyre
 React.js hooks for making payments using SendWyre. https://docs.sendwyre.com
 
-## Features
+## 🔥 Features
   - Buy and sell fiat and crypto currency in both [**React**](https://reactjs.org/) and [**React Native**](https://reactnative.dev/)
   - Exports an [`axios`](https://github.com/axios/axios)-inspired `useWyre` hook to aid rapid prototyping against the [**SendWyre API**](https://docs.sendwyre.com/).
   - Provides a high-level [`useDebitCard`](./src/hooks/useDebitCard.ts) hook to rapidly introduce debit card payments.
   - Permits a `baseUrl` prop which does not conflict with request signing.
     - _This can be used as a [workaround](https://cors-anywhere.herokuapp.com/) to [**CORS**](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) issues on the Web._
 
-## Getting Started
+## 🚀 Getting Started
 
 Before starting, please make sure that you've [**collected an API key**](https://www.testwyre.com/) against the environment you wish to target.
 
@@ -71,5 +71,5 @@ const {data} = await(
 );
 ```
 
-## License
+## ✌️ License
 [**MIT**](./LICENSE)
