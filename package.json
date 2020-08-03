@@ -7,6 +7,21 @@
   "author": "Alex Thomas (@cawfree) <hello@cawfree.com>",
   "license": "MIT",
   "private": false,
+  "keywords": [
+    "wyre",
+    "sendwyre",
+    "react",
+    "react-native",
+    "payment",
+    "crypto",
+    "debit",
+    "card"
+  ],
+  "scripts": {
+    "build": "babel src --plugins @babel/plugin-transform-typescript --extensions '.ts,.tsx' --out-dir dist",
+    "prettify": "yarn prettier --write '**/*.tsx|**/*.ts'",
+    "test": "jest"
+  },
   "peerDependencies": {
     "prop-types": "^15.7.2",
     "react": "^16.13.1"
@@ -15,9 +30,11 @@
     "@babel/cli": "^7.10.5",
     "@babel/core": "^7.11.0",
     "@babel/node": "^7.10.5",
+    "@babel/plugin-transform-typescript": "^7.11.0",
     "@babel/polyfill": "^7.10.4",
     "@babel/preset-env": "^7.11.0",
     "@babel/preset-react": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
     "husky": "^4.2.5",
     "jest": "^26.2.2",
     "leasot": "^11.1.0",
