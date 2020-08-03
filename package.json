@@ -1,6 +1,6 @@
 {
   "name": "react-use-wyre",
-  "version": "0.0.1-alpha.0",
+  "version": "0.0.1-alpha.1",
   "description": "🤑 React.js hooks for making payments using SendWyre. https://docs.sendwyre.com/",
   "main": "dist",
   "repository": "https://github.com/cawfree/react-use-wyre",
@@ -18,7 +18,7 @@
     "card"
   ],
   "scripts": {
-    "build": "babel src --plugins @babel/plugin-transform-typescript --extensions '.ts,.tsx' --out-dir dist",
+    "build": "yarn ; babel src --plugins @babel/plugin-transform-typescript --extensions '.ts,.tsx' --out-dir dist ; rm -rf node_modules",
     "prettify": "yarn prettier --write '**/*.tsx|**/*.ts'",
     "lint": "eslint --fix --ext .ts,.tsx ./src",
     "test": "jest"
