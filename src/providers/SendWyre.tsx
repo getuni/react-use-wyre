@@ -65,7 +65,7 @@ SendWyre.displayName = "SendWyre";
 SendWyre.defaultProps = {
   apiKey: null,
   secretKey: null,
-  baseUrl: "https://cors-anywhere.herokuapp.com/",
+  baseUrl: "",
   apiUrl: "https://api.testwyre.com",
 };
 
