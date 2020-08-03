@@ -1,0 +1,31 @@
+{
+  "name": "react-use-wyre",
+  "version": "0.0.1-alpha.0",
+  "description": "🤑 React.js hooks for making payments using SendWyre. https://docs.sendwyre.com/",
+  "main": "dist",
+  "repository": "https://github.com/cawfree/react-use-wyre",
+  "author": "Alex Thomas (@cawfree) <hello@cawfree.com>",
+  "license": "MIT",
+  "private": false,
+  "peerDependencies": {
+    "prop-types": "^15.7.2",
+    "react": "^16.13.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.0",
+    "@babel/node": "^7.10.5",
+    "@babel/polyfill": "^7.10.4",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/preset-react": "^7.10.4",
+    "husky": "^4.2.5",
+    "jest": "^26.2.2",
+    "leasot": "^11.1.0",
+    "prettier": "^2.0.5"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "jsrsasign": "^8.0.21",
+    "type-check": "^0.4.0"
+  }
+}
