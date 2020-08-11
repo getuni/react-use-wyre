@@ -1,7 +1,7 @@
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import SendWyre, { useDebitCard } from 'react-use-wyre';
+import SendWyre, { useWyre, useDebitCard } from 'react-use-wyre';
 import Constants from "expo-constants";
 
 const { APP_MANIFEST: { extra } } = process.env;
@@ -40,6 +40,36 @@ function DebitCard({ ...extras }): JSX.Element {
   );
 }
 
+function QuoteTransaction({ amount, sourceCurrency, destCurrency, dest, accountId, country }) {
+  const [result, setResult] = useState(null);
+  const {wyre} = useWyre();
+  useEffect(
+    () => (async () => {
+      const { data } = await wyre({
+        url: "v3/orders/quote/partner",
+        method: "post",
+        data: {
+          amount,
+          sourceCurrency,
+          destCurrency,
+          dest,
+          accountId,
+          country,
+        },
+      });
+      setResult(data);
+    })() && undefined,
+    [amount, sourceCurrency, destCurrency, dest, accountId, country, setResult],
+  );
+  return (
+    <View>
+      {!!result && (
+        <Text children={JSON.stringify(result)} />
+      )}
+    </View>
+  );
+}
+
 export default function App() {
   return (
     <SendWyre
@@ -52,6 +82,14 @@ export default function App() {
         <DebitCard>
           <Text>Tap here to make a fake debit card transaction.</Text>
         </DebitCard>
+        <QuoteTransaction
+          amount="100.00"
+          sourceCurrency="USD"
+          destCurrency="ETH"
+          dest="ethereum:0x0dfd1a00b5e25065e162534a630242d8debdab41"
+          accountId="AC_M7JR6JUCDR3"
+          country="US"
+        />
       </View>
     </SendWyre>
   );
