@@ -5,7 +5,7 @@ import SendWyre, { useDebitCard } from 'react-use-wyre';
 import Constants from "expo-constants";
 
 const { APP_MANIFEST: { extra } } = process.env;
-const { REACT_NATIVE_WYRE_API_KEY: apiKey, REACT_NATIVE_WYRE_SECRET_KEY: secretKey } = extra;
+const { WYRE_API_KEY: apiKey, WYRE_SECRET_KEY: secretKey } = extra;
 
 function DebitCard({ ...extras }): JSX.Element {
   const { pay } = useDebitCard();

@@ -9,8 +9,8 @@ module.exports = {
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "extra": {
-      "REACT_NATIVE_WYRE_API_KEY": process.env.REACT_NATIVE_WYRE_API_KEY,
-      "REACT_NATIVE_WYRE_SECRET_KEY": process.env.REACT_NATIVE_WYRE_SECRET_KEY,
+      "WYRE_API_KEY": process.env.WYRE_API_KEY,
+      "WYRE_SECRET_KEY": process.env.WYRE_SECRET_KEY,
     },
     "splash": {
       "image": "./assets/splash.png",
