@@ -71,10 +71,10 @@ function QuoteTransaction({ amount, sourceCurrency, destCurrency, dest, accountI
 }
 
 function ApplePay() {
-  const [requestApplePay] = useApplePay();
+  const [requestApplePay, completeApplePay] = useApplePay();
   useEffect(
     () => (async () => {
-      const [totalCost, pay] = await requestApplePay(
+      const ref = await requestApplePay(
         {
           amount: 1,
           sourceCurrency: "USD",
@@ -96,12 +96,11 @@ function ApplePay() {
           },
         },
       );
+      const {quote: {sourceAmount: totalCost}} = ref;
 
       console.warn('The total cost is:', totalCost);
-
-      const {...data} = await pay(YOUR_APPLE_TOKEN_JSON);
-
-      console.warn('The placed  order is:', data);
+      const {...data} = await completeApplePay(ref, YOUR_APPLE_TOKEN_JSON);
+      console.warn('The placed  wallet order is:', data);
 
     })() && undefined,
     [requestApplePay],

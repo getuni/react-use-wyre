@@ -3,28 +3,20 @@ import { useWyre } from ".";
 
 export default function useApplePay() {
   const { wyre } = useWyre();
-  const prepareApplePay = useCallback(
-    async ({
-      amount,
-      sourceCurrency,
-      destCurrency,
-      dest,
-      partnerId,
-      countryCode,
-      referenceId,
-      user: {
-        firstName,
-        lastName,
-        email,
-        street1,
-        city,
-        state,
-        country,
-        postalCode,
-        phone,
-      },
-    }) => {
-      const {data: {sourceAmount}} = await wyre( // amountUserHasToPay
+
+  const prepare = useCallback(
+    async ({...opts}) => {
+      const {
+        amount,
+        sourceCurrency,
+        destCurrency,
+        dest,
+        partnerId,
+        countryCode,
+        referenceId,
+        user: {firstName, lastName, email, street1, city, state, country, postalCode, phone},
+      } = opts;
+      const {data: quote} = await wyre(
         {
           url: "v3/orders/quote/partner",
           method: "post",
@@ -38,7 +30,7 @@ export default function useApplePay() {
           },
         },
       );
-      const {data: {reservation}} = await wyre(
+      const {data: reserve} = await wyre(
         {
           url: "v3/orders/reserve",
           method: "post",
@@ -65,64 +57,84 @@ export default function useApplePay() {
           },
         },
       );
-      return [
-        sourceAmount,
-        async (applePayToken) => {
-          const addressLines = [street1, city, state];
-          const {data} = await wyre(
-            {
-              url: "v3/apple-pay/process/partner",
-              method: "post",
-              data: {
-                partnerId,
-                payload: {
-                  paymentObject: {
-                    billingContact: {
-                      addressLines,
-                      postalCode,
-                      country,
-                      countryCode,
-                      familyName: lastName,
-                      givenName: firstName,
-                      locality: city,
-                      administrativeArea: state,
-                      subAdministrativeArea: "",
-                      subLocality: "",
-                    },
-                    shippingContact: {
-                      addressLines,
-                      postalCode,
-                      country,
-                      countryCode,
-                      emailAddress: email,
-                      familyName: lastName,
-                      givenName: firstName,
-                      locality: city,
-                      phoneNumber: phone,
-                      administrativeArea: state,
-                      subAdministrativeArea: "",
-                      subLocality: "",
-                    },
-                    token: applePayToken,
-                  },
-                  orderRequest: {
-                    amount,
-                    sourceCurrency,
-                    destCurrency,
-                    dest,
-                    reservationId: reservation,
-                    referrerAccountId: partnerId,
-                    referenceId,
-                  }
-                }
-              },
-            },
-          );
-          return data;
-        }
-      ];
+
+      // XXX: Return the completed transaction data.
+      return Object.freeze({...opts, quote, reserve});
     },
     [],
   );
-  return [prepareApplePay];
+
+  const complete = useCallback(
+    async (
+      {
+        /* specified */
+        amount,
+        sourceCurrency,
+        destCurrency,
+        dest,
+        partnerId,
+        countryCode,
+        referenceId,
+        user: {firstName, lastName, email, street1, city, state, country, postalCode, phone},
+        /* computed */
+        // quote: {sourceAmount}, (Useful for implementors to inform how much a specific transaction will cost.)
+        reserve: {reservation},
+      },
+      applePayToken,
+    ) => {
+      const addressLines = [street1, city, state];
+      const {data} = await wyre(
+        {
+          url: "v3/apple-pay/process/partner",
+          method: "post",
+          data: {
+            partnerId,
+            payload: {
+              paymentObject: {
+                billingContact: {
+                  addressLines,
+                  postalCode,
+                  country,
+                  countryCode,
+                  familyName: lastName,
+                  givenName: firstName,
+                  locality: city,
+                  administrativeArea: state,
+                  subAdministrativeArea: "",
+                  subLocality: "",
+                },
+                shippingContact: {
+                  addressLines,
+                  postalCode,
+                  country,
+                  countryCode,
+                  emailAddress: email,
+                  familyName: lastName,
+                  givenName: firstName,
+                  locality: city,
+                  phoneNumber: phone,
+                  administrativeArea: state,
+                  subAdministrativeArea: "",
+                  subLocality: "",
+                },
+                token: applePayToken,
+              },
+              orderRequest: {
+                amount,
+                sourceCurrency,
+                destCurrency,
+                dest,
+                reservationId: reservation,
+                referrerAccountId: partnerId,
+                referenceId,
+              }
+            }
+          },
+        },
+      );
+      return data;
+    },
+    [],
+  );
+  return [prepare, complate];
 }
