@@ -136,5 +136,5 @@ export default function useApplePay() {
     },
     [],
   );
-  return [prepare, complate];
+  return [prepare, complete];
 }
