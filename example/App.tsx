@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import SendWyre, { useWyre, useDebitCard } from 'react-use-wyre';
+import SendWyre, { useWyre, useDebitCard, useApplePay } from 'react-use-wyre';
 import Constants from "expo-constants";
 
 const { APP_MANIFEST: { extra } } = process.env;
@@ -70,6 +70,45 @@ function QuoteTransaction({ amount, sourceCurrency, destCurrency, dest, accountI
   );
 }
 
+function ApplePay() {
+  const [requestApplePay] = useApplePay();
+  useEffect(
+    () => (async () => {
+      const [totalCost, pay] = await requestApplePay(
+        {
+          amount: 1,
+          sourceCurrency: "USD",
+          destCurrency: "ETH",
+          dest: "ethereum:0x9E01E0E60dF079136a7a1d4ed97d709D5Fe3e341",
+          partnerId: YOUR_PARTNER_ID,
+          countryCode: "US",
+          referenceId: SOME_USEFUL_REFERENCE_ID,
+          user: {
+            firstName: "User",
+            lastName: "Surname",
+            email: "user@sendwyre.com",
+            street1: "1550 Bryant Street",
+            city: "San Francisco",
+            state: "CA",
+            country: "US",
+            postalCode: "94103",
+            phone: "+12126712234", 
+          },
+        },
+      );
+
+      console.warn('The total cost is:', totalCost);
+
+      const {...data} = await pay(YOUR_APPLE_TOKEN_JSON);
+
+      console.warn('The placed  order is:', data);
+
+    })() && undefined,
+    [requestApplePay],
+  );
+  return null;
+}
+
 export default function App() {
   return (
     <SendWyre
@@ -90,6 +129,7 @@ export default function App() {
           accountId="AC_M7JR6JUCDR3"
           country="US"
         />
+        <ApplePay />
       </View>
     </SendWyre>
   );
