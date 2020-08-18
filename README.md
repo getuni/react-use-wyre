@@ -5,6 +5,7 @@ React.js hooks for making payments using SendWyre. https://docs.sendwyre.com
   - Buy and sell fiat and crypto currency in both [**React**](https://reactjs.org/) and [**React Native**](https://reactnative.dev/)
   - Exports an [`axios`](https://github.com/axios/axios)-inspired `useWyre` hook to aid rapid prototyping against the [**SendWyre API**](https://docs.sendwyre.com/)
   - Provides a high-level [`useDebitCard`](./src/hooks/useDebitCard.ts) hook to rapidly introduce debit card payments
+  - Provides an easy-to-use [`useApplePay`](./src/hooks/useApplePay.ts) hook to make payments using Apple Pay a breeze 🌊
   - Permits a `baseUrl` prop which does not conflict with request signing
     - _This can be used as a [workaround](https://cors-anywhere.herokuapp.com/) to [**CORS**](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) issues on the Web_
 

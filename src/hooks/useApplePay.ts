@@ -77,7 +77,7 @@ export default function useApplePay() {
         referenceId,
         user: {firstName, lastName, email, street1, city, state, country, postalCode, phone},
         /* computed */
-        // quote: {sourceAmount}, (Useful for implementors to inform how much a specific transaction will cost.)
+        quote: {sourceAmount},
         reserve: {reservation},
       },
       applePayToken,
@@ -120,7 +120,8 @@ export default function useApplePay() {
                 token: applePayToken,
               },
               orderRequest: {
-                amount,
+                //amount,
+                amount: sourceAmount,
                 sourceCurrency,
                 destCurrency,
                 dest,
