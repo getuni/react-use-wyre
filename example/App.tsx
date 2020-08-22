@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import SendWyre, { useWyre, useDebitCard, useApplePay, useTransfer, useReservation } from 'react-use-wyre';
+import SendWyre, {
+  useWyre,
+  useDebitCard,
+  useApplePay,
+  useTransfer,
+  useReservation,
+  useWalletOrder,
+} from 'react-use-wyre';
 import Constants from "expo-constants";
 
 
 function DebitCard({ ...extras }): JSX.Element {
   const { wyre } = useWyre();
   const { getTransfer } = useTransfer();
+  const { getWalletOrder } = useWalletOrder();
   const { makeReservation } = useReservation();
   const { pay } = useDebitCard();
   return (
@@ -48,12 +56,8 @@ function DebitCard({ ...extras }): JSX.Element {
           },
         );
         const { walletOrderId } = result;
-        //const {data} = await wyre({
-        //  url: "",
-        //});
-        //console.log("Successfully made a payment!", result);
-        //const transfer = await getTransfer({ transferId: walletOrderId });
-        //console.log("transfer details", transfer);
+        const { status } = await getWalletOrder(walletOrderId);
+        console.log("The order status is: ", status);
       }}
     />
   );
@@ -93,7 +97,6 @@ function QuoteTransaction({ amount, sourceCurrency, destCurrency, dest, accountI
 //function ApplePay() {
 //  const { makeReservation } = useReservation();
 //  const { processApplePay } = useApplePay();
-//  const [requestApplePay, completeApplePay] = useApplePay();
 //  useEffect(
 //    () => (async () => {
 //      const ref = await makeReservation(
