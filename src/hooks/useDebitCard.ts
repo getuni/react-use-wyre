@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { useWyre } from ".";
 
 export default function useDebitCard() {
-  const { wyre } = useWyre();
+  const { wyre, partnerId } = useWyre();
   const pay = useCallback(
     async ({
       /* specified */
@@ -11,7 +11,6 @@ export default function useDebitCard() {
       sourceCurrency,
       destCurrency,
       dest,
-      partnerId,
       countryCode,
       referenceId,
       user: {firstName, lastName, email, street1, city, state, country, postalCode, phone},
@@ -83,7 +82,7 @@ export default function useDebitCard() {
         },
       });
     },
-    [wyre]
+    [wyre, partnerId]
   );
   return { pay };
 }

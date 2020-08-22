@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useWyre, useReservation } from ".";
 
 export default function useApplePay() {
-  const { wyre } = useWyre();
+  const { wyre, partnerId } = useWyre();
   const processApplePay = useCallback(
     async (
       {
@@ -11,7 +11,6 @@ export default function useApplePay() {
         sourceCurrency,
         destCurrency,
         dest,
-        partnerId,
         countryCode,
         referenceId,
         user: {firstName, lastName, email, street1, city, state, country, postalCode, phone},
@@ -74,7 +73,7 @@ export default function useApplePay() {
       );
       return data;
     },
-    [],
+    [wyre, partnerId],
   );
 
   return { processApplePay };

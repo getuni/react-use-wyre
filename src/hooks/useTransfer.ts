@@ -1,10 +1,10 @@
-import { useCallback } from "react-native";
+import { useCallback } from "react";
 
 import { useWyre } from ".";
 
 export default function useTransfer() {
   const { wyre } = useWyre();
-  const getTransfer = useEffect(
+  const getTransfer = useCallback(
     async ({ transferId }) => {
       if (typeof transferId !== "string") {
         return setError(new Error(`Expected String transferId, encountered ${transferId}.`));

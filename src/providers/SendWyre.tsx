@@ -11,11 +11,13 @@ export type SendWyreProps = {
   secretKey: string;
   apiUrl: string;
   baseUrl: string;
+  partnerId: string;
 };
 
 const SendWyre = function ({
   apiKey,
   secretKey,
+  partnerId,
   apiUrl,
   baseUrl,
   children,
@@ -26,6 +28,10 @@ const SendWyre = function ({
   } else if (!typeCheck("String", secretKey)) {
     throw new Error(
       `SendWyre: Expected String secretKey, encountered ${secretKey}.`
+    );
+  } else if (!typeCheck("String", partnerId)) {
+    throw new Error(
+      `SendWyre: Expected String partnerId, encountered ${partnerId}.`
     );
   }
   const wyre = useCallback(
@@ -54,7 +60,10 @@ const SendWyre = function ({
     [secretKey, apiKey, apiUrl, baseUrl]
   );
   return (
-    <SendWyreContext.Provider {...extras} value={{ wyre }}>
+    <SendWyreContext.Provider
+      {...extras}
+      value={{ wyre, partnerId }}
+    >
       {children}
     </SendWyreContext.Provider>
   );
@@ -65,6 +74,7 @@ SendWyre.displayName = "SendWyre";
 SendWyre.defaultProps = {
   apiKey: null,
   secretKey: null,
+  partnerId: null,
   baseUrl: "",
   apiUrl: "https://api.testwyre.com",
 };

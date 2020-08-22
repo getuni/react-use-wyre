@@ -42,6 +42,7 @@ export default function App({...extras}) {
     <SendWyre
       apiKey={apiKey}
       secretKey={secretKey}
+      partnerId={partnerId}
       baseUrl="https://cors-anywhere.herokuapp.com/"
     >
       {/* your app here */}

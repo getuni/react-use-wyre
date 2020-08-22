@@ -4,7 +4,7 @@ import { useWyre } from ".";
 
 export default function useReservation() {
 
-  const { wyre } = useWyre();
+  const { wyre, partnerId } = useWyre();
 
   const makeReservation = useCallback(
     async ({...opts}) => {
@@ -13,7 +13,6 @@ export default function useReservation() {
         sourceCurrency,
         destCurrency,
         dest,
-        partnerId,
         countryCode,
         referenceId,
         user: {firstName, lastName, email, street1, city, state, country, postalCode, phone},
@@ -49,8 +48,8 @@ export default function useReservation() {
             street1,
             country,
             // TODO: fix this
-            "redirectUrl": "https://google.com",
-            "failureRedirectUrl": "https://google.com",
+            redirectUrl: "https://google.com",
+            failureRedirectUrl: "https://google.com",
             paymentMethod: "apple-pay",
             state,
             postalCode,
@@ -62,7 +61,7 @@ export default function useReservation() {
       // XXX: Return the completed transaction data.
       return Object.freeze({...opts, quote, reserve});
     },
-    [wyre],
+    [wyre, partnerId],
   );
 
   return { makeReservation };

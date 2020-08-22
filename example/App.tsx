@@ -4,8 +4,6 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import SendWyre, { useWyre, useDebitCard, useApplePay, useTransfer, useReservation } from 'react-use-wyre';
 import Constants from "expo-constants";
 
-const { APP_MANIFEST: { extra } } = process.env;
-const { WYRE_API_KEY: apiKey, WYRE_SECRET_KEY: secretKey, WYRE_PARTNER_ID: partnerId } = extra;
 
 function DebitCard({ ...extras }): JSX.Element {
   const { getTransfer } = useTransfer();
@@ -21,7 +19,6 @@ function DebitCard({ ...extras }): JSX.Element {
             sourceCurrency: "USD",
             destCurrency: "ETH",
             dest: "ethereum:0x9E01E0E60dF079136a7a1d4ed97d709D5Fe3e341",
-            partnerId,
             countryCode: "US",
             referenceId: `${Math.random()}`,
             user: {
@@ -50,7 +47,6 @@ function DebitCard({ ...extras }): JSX.Element {
           },
         );
         console.log(result);
-        const {} = ;
       }}
     />
   );
@@ -99,7 +95,6 @@ function QuoteTransaction({ amount, sourceCurrency, destCurrency, dest, accountI
 //          sourceCurrency: "USD",
 //          destCurrency: "ETH",
 //          dest: "ethereum:0x9E01E0E60dF079136a7a1d4ed97d709D5Fe3e341",
-//          partnerId,
 //          countryCode: "US",
 //          referenceId: `${Math.random()}`,
 //          user: {
@@ -126,11 +121,16 @@ function QuoteTransaction({ amount, sourceCurrency, destCurrency, dest, accountI
 //  return null;
 //}
 
+
+const { APP_MANIFEST: { extra } } = process.env;
+const { WYRE_API_KEY: apiKey, WYRE_SECRET_KEY: secretKey, WYRE_PARTNER_ID: partnerId } = extra;
+
 export default function App() {
   return (
     <SendWyre
       apiKey={apiKey}
       secretKey={secretKey}
+      partnerId={partnerId}
       baseUrl="https://cors-anywhere.herokuapp.com/"
     >
       <View style={styles.container}>
