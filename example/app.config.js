@@ -11,6 +11,7 @@ module.exports = {
     "extra": {
       "WYRE_API_KEY": process.env.WYRE_API_KEY,
       "WYRE_SECRET_KEY": process.env.WYRE_SECRET_KEY,
+      "WYRE_PARTNER_ID": process.env.WYRE_PARTNER_ID,
     },
     "splash": {
       "image": "./assets/splash.png",

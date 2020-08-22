@@ -5,14 +5,48 @@ import { useWyre } from ".";
 export default function useDebitCard() {
   const { wyre } = useWyre();
   const pay = useCallback(
-    // TODO: Just accept raw data and validate.
-    async ({...data}) => {
+    async ({
+      /* specified */
+      amount,
+      sourceCurrency,
+      destCurrency,
+      dest,
+      partnerId,
+      countryCode,
+      referenceId,
+      user: {firstName, lastName, email, street1, city, state, country, postalCode, phone},
+      /* computed */
+      quote: {sourceAmount},
+      reserve: {reservation},
+      /* additional */
+      debitCard,
+    }) => {
       const {
         data: { id: walletOrderId },
       } = await wyre({
         url: "v3/debitcard/process",
         method: "post",
-        data,
+        data: {
+          sourceCurrency,
+          amount,
+          destCurrency,
+          dest,
+          reservationId: reservation,
+          accountId: partnerId,
+          referrerAccountId: partnerId,
+          givenName: firstName,
+          familyName: lastName,
+          email,
+          phone,
+          address: {
+            street1,
+            city,
+            state,
+            postalCode,
+            country,
+          },
+          debitCard,
+        },
       });
 
       const {
@@ -24,6 +58,7 @@ export default function useDebitCard() {
 
       // XXX: What to return?
       return Object.freeze({
+        walletOrderId,
         smsNeeded,
         card2faNeeded,
         authorize: async ({ sms, card2fa }) => {

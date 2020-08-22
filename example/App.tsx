@@ -1,41 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import SendWyre, { useWyre, useDebitCard, useApplePay } from 'react-use-wyre';
+import SendWyre, { useWyre, useDebitCard, useApplePay, useTransfer, useReservation } from 'react-use-wyre';
 import Constants from "expo-constants";
 
 const { APP_MANIFEST: { extra } } = process.env;
-const { WYRE_API_KEY: apiKey, WYRE_SECRET_KEY: secretKey } = extra;
+const { WYRE_API_KEY: apiKey, WYRE_SECRET_KEY: secretKey, WYRE_PARTNER_ID: partnerId } = extra;
 
 function DebitCard({ ...extras }): JSX.Element {
+  const { makeReservation } = useReservation();
   const { pay } = useDebitCard();
   return (
     <TouchableOpacity
       {...extras}
-      onPress={() => pay({
-        debitCard:{
-          number: "4111111111111111",
-          month: "01",
-          year: "23",
-          cvv: "312",
-        },
-        sourceCurrency: "USD",
-        amount: "1.50",
-        destCurrency: "BTC",
-        dest: "bitcoin:tb1q6yn0ajs733xsk25vefrhwjey4629qt9c67y6ma",
-        referrerAccountId: "AC_C24QF6JJWVA",
-        givenName: "Username",
-        familyName: "Lastname",
-        email: "test.wyre@sendwyre.com",
-        phone: "+12126712234", 
-        address: {
-          street1: "5825 Reseda Blvd",
-          city: "US",
-          state: "CA",
-          postalCode: "94103",
-          country: "US",
-        }
-      })}
+      onPress={async () => {
+        const ref = await makeReservation(
+          {
+            amount: 1,
+            sourceCurrency: "USD",
+            destCurrency: "ETH",
+            dest: "ethereum:0x9E01E0E60dF079136a7a1d4ed97d709D5Fe3e341",
+            partnerId,
+            countryCode: "US",
+            referenceId: `${Math.random()}`,
+            user: {
+              firstName: "User",
+              lastName: "Surname",
+              email: "user@sendwyre.com",
+              street1: "1550 Bryant Street",
+              city: "San Francisco",
+              state: "CA",
+              country: "US",
+              postalCode: "94103",
+              phone: "+12126712234", 
+            },
+          },
+        );
+        console.log("Debit card reservation is:", ref);
+        const { data: result } = await pay(
+          {
+            ...ref,
+            debitCard:{
+              number: "4111111111111111",
+              month: "01",
+              year: "2023",
+              cvv: "312",
+            },
+          },
+        );
+        console.log(result);
+      }}
     />
   );
 }
@@ -70,43 +84,45 @@ function QuoteTransaction({ amount, sourceCurrency, destCurrency, dest, accountI
   );
 }
 
-function ApplePay() {
-  const [requestApplePay, completeApplePay] = useApplePay();
-  useEffect(
-    () => (async () => {
-      const ref = await requestApplePay(
-        {
-          amount: 1,
-          sourceCurrency: "USD",
-          destCurrency: "ETH",
-          dest: "ethereum:0x9E01E0E60dF079136a7a1d4ed97d709D5Fe3e341",
-          partnerId: YOUR_PARTNER_ID,
-          countryCode: "US",
-          referenceId: SOME_USEFUL_REFERENCE_ID,
-          user: {
-            firstName: "User",
-            lastName: "Surname",
-            email: "user@sendwyre.com",
-            street1: "1550 Bryant Street",
-            city: "San Francisco",
-            state: "CA",
-            country: "US",
-            postalCode: "94103",
-            phone: "+12126712234", 
-          },
-        },
-      );
-      const {quote: {sourceAmount: totalCost}} = ref;
 
-      console.warn('The total cost is:', totalCost);
-      const {...data} = await completeApplePay(ref, YOUR_APPLE_TOKEN_JSON);
-      console.warn('The placed  wallet order is:', data);
-
-    })() && undefined,
-    [requestApplePay],
-  );
-  return null;
-}
+//function ApplePay() {
+//  const { makeReservation } = useReservation();
+//  const { processApplePay } = useApplePay();
+//  const [requestApplePay, completeApplePay] = useApplePay();
+//  useEffect(
+//    () => (async () => {
+//      const ref = await makeReservation(
+//        {
+//          amount: 1,
+//          sourceCurrency: "USD",
+//          destCurrency: "ETH",
+//          dest: "ethereum:0x9E01E0E60dF079136a7a1d4ed97d709D5Fe3e341",
+//          partnerId,
+//          countryCode: "US",
+//          referenceId: `${Math.random()}`,
+//          user: {
+//            firstName: "User",
+//            lastName: "Surname",
+//            email: "user@sendwyre.com",
+//            street1: "1550 Bryant Street",
+//            city: "San Francisco",
+//            state: "CA",
+//            country: "US",
+//            postalCode: "94103",
+//            phone: "+12126712234", 
+//          },
+//        },
+//      );
+//
+//      const {quote: {sourceAmount: totalCost}} = ref;
+//      console.warn('The total cost is:', totalCost);
+//      //const {...data} = await processApplePay(ref, YOUR_APPLE_TOKEN_JSON);
+//      //console.warn('The placed  wallet order is:', data);
+//    })() && undefined,
+//    [makeReservation, processApplePay],
+//  );
+//  return null;
+//}
 
 export default function App() {
   return (
@@ -117,9 +133,11 @@ export default function App() {
     >
       <View style={styles.container}>
         <StatusBar style="auto" />
+
         <DebitCard>
           <Text>Tap here to make a fake debit card transaction.</Text>
         </DebitCard>
+
         <QuoteTransaction
           amount="100.00"
           sourceCurrency="USD"
@@ -128,11 +146,14 @@ export default function App() {
           accountId="AC_M7JR6JUCDR3"
           country="US"
         />
-        <ApplePay />
+
       </View>
     </SendWyre>
   );
 }
+
+//        <ApplePay />
+
 
 const styles = StyleSheet.create({
   container: {
