@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
 import SendWyre, {
   useWyre,
   useDebitCard,
@@ -141,7 +141,7 @@ export default function App() {
       apiKey={apiKey}
       secretKey={secretKey}
       partnerId={partnerId}
-      baseUrl="https://cors-anywhere.herokuapp.com/"
+      baseUrl={Platform.OS === "web" ? "https://cors-anywhere.herokuapp.com/" : ""}
     >
       <View style={styles.container}>
         <StatusBar style="auto" />
