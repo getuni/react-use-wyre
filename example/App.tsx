@@ -6,6 +6,7 @@ import Constants from "expo-constants";
 
 
 function DebitCard({ ...extras }): JSX.Element {
+  const { wyre } = useWyre();
   const { getTransfer } = useTransfer();
   const { makeReservation } = useReservation();
   const { pay } = useDebitCard();
@@ -35,7 +36,7 @@ function DebitCard({ ...extras }): JSX.Element {
           },
         );
         console.log("Debit card reservation is:", ref);
-        const { data: result } = await pay(
+        const result = await pay(
           {
             ...ref,
             debitCard:{
@@ -46,7 +47,13 @@ function DebitCard({ ...extras }): JSX.Element {
             },
           },
         );
-        console.log(result);
+        const { walletOrderId } = result;
+        //const {data} = await wyre({
+        //  url: "",
+        //});
+        //console.log("Successfully made a payment!", result);
+        //const transfer = await getTransfer({ transferId: walletOrderId });
+        //console.log("transfer details", transfer);
       }}
     />
   );

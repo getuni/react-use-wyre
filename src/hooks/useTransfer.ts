@@ -10,7 +10,7 @@ export default function useTransfer() {
         return setError(new Error(`Expected String transferId, encountered ${transferId}.`));
       }
       const { data } = await wyre({
-        url: `v3/transfers/${transferId}`,
+        url: `v3/transfers/${transferId}/track`,
         method: "get",
       });
       return data;
