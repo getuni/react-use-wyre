@@ -8,6 +8,7 @@ const { APP_MANIFEST: { extra } } = process.env;
 const { WYRE_API_KEY: apiKey, WYRE_SECRET_KEY: secretKey, WYRE_PARTNER_ID: partnerId } = extra;
 
 function DebitCard({ ...extras }): JSX.Element {
+  const { getTransfer } = useTransfer();
   const { makeReservation } = useReservation();
   const { pay } = useDebitCard();
   return (
@@ -49,6 +50,7 @@ function DebitCard({ ...extras }): JSX.Element {
           },
         );
         console.log(result);
+        const {} = ;
       }}
     />
   );
