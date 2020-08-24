@@ -22,5 +22,20 @@ export default function usePaymentMethod() {
     [wyre],
   );
 
-  return { createPaymentMethod };
+  const attachBlockchain = useCallback(
+    async ({ paymentMethodId, blockchains, notifyUrl, muteMessages }) => {
+      const { data } = await wyre({
+        url: `v2/paymentMethod/${paymentMethodId}/attach`,
+        method: "post",
+        data: {
+          blockchain: [...blockchains].join(","),
+          notifyUrl,
+          muteMessages,
+        },
+      });
+    },
+    [wyre],
+  );
+
+  return { createPaymentMethod, attachBlockchain };
 }

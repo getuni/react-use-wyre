@@ -13,14 +13,21 @@ import SendWyre, {
 import Constants from "expo-constants";
 
 function CreatePaymentMethod({ ...extras }): JSX.Element {
-  const { createPaymentMethod } = usePaymentMethod();
+  const { wyre } = useWyre();
+  const { createPaymentMethod, attachBlockchain } = usePaymentMethod();
   return (
     <TouchableOpacity
       onPress={async () => {
-        const result = await createPaymentMethod({
-          publicToken: "public-sandbox-3607d7a1-bb38-4e1b-9102-0cef05261eff|lLLqWlmqAMI1XXA4w7ngS1vqwaBEe5iZ78P4p",
+        const { id, srn } = await createPaymentMethod({
+          publicToken: "public-sandbox-9798469c-3a2c-4548-82ef-5278d8f1d36b|lr7yLBw8Nvcn9kA1dV1JhK6j4aLVx7hZ7arzQ",
         });
-        console.log(result);
+        const data = await attachBlockchain({
+          paymentMethodId: id,
+          blockchains: ["ALL"],
+          notifyUrl: null,
+          muteMessages: true,
+        });
+        console.log(data);
       }}
     >
       <Text children="Withdraw some fake money." />
