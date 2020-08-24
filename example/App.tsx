@@ -14,20 +14,40 @@ import Constants from "expo-constants";
 
 function CreatePaymentMethod({ ...extras }): JSX.Element {
   const { wyre } = useWyre();
-  const { createPaymentMethod, attachBlockchain } = usePaymentMethod();
+  const { createPaymentMethod, listPaymentMethods, attachBlockchain } = usePaymentMethod();
   return (
     <TouchableOpacity
       onPress={async () => {
-        const { id, srn } = await createPaymentMethod({
-          publicToken: "public-sandbox-9798469c-3a2c-4548-82ef-5278d8f1d36b|lr7yLBw8Nvcn9kA1dV1JhK6j4aLVx7hZ7arzQ",
-        });
-        const data = await attachBlockchain({
-          paymentMethodId: id,
-          blockchains: ["ALL"],
-          notifyUrl: null,
-          muteMessages: true,
-        });
-        console.log(data);
+        //const data = await listPaymentMethods();
+        //console.log(data);
+        // list payment methods
+        //const { id, owner, srn } = await createPaymentMethod({
+        //  publicToken: "public-sandbox-0867194d-97cd-4691-8282-c4acff3b9788|MrBN83mDa5cjqZLbK7JwfWPW7oowmzH9DZRKN",
+        //});
+        //const { blockchains } = await attachBlockchain({
+        //  paymentMethodId: id,
+        //  blockchains: ["ALL"],
+        //  notifyUrl: null,
+        //  muteMessages: true,
+        //});
+        // changes each time...
+        // XXX: load it up with ETH...
+        // XXX: ETH, BTC.
+        // create a transfer
+        //const { data } = await wyre({
+        //  url: "v3/transfers",
+        //  method: "post",
+        //  data: {
+        //    source: owner,
+        //    sourceCurrency: "ETH",
+        //    sourceAmount: "0.1",
+        //    dest: srn, 
+        //    destCurrency:"USD", 
+        //    message: "Payment for DorianNakamoto@sendwyre.com",
+        //    autoConfirm: false,
+        //  },
+        //});
+        //console.log(data);
       }}
     >
       <Text children="Withdraw some fake money." />

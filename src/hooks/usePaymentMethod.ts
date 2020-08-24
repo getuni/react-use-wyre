@@ -22,6 +22,17 @@ export default function usePaymentMethod() {
     [wyre],
   );
 
+  const listPaymentMethods = useCallback(
+    async () => {
+      const { data } = await wyre({
+        url: "v2/paymentMethods",
+        method: "get",
+      });
+      return data;
+    },
+    [wyre],
+  );
+
   const attachBlockchain = useCallback(
     async ({ paymentMethodId, blockchains, notifyUrl, muteMessages }) => {
       const { data } = await wyre({
@@ -33,9 +44,14 @@ export default function usePaymentMethod() {
           muteMessages,
         },
       });
+      return data;
     },
     [wyre],
   );
 
-  return { createPaymentMethod, attachBlockchain };
+  return {
+    createPaymentMethod,
+    listPaymentMethods,
+    attachBlockchain,
+  };
 }
