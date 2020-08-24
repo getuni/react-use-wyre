@@ -8,9 +8,25 @@ import SendWyre, {
   useTransfer,
   useReservation,
   useWalletOrder,
+  usePaymentMethod,
 } from 'react-use-wyre';
 import Constants from "expo-constants";
 
+function CreatePaymentMethod({ ...extras }): JSX.Element {
+  const { createPaymentMethod } = usePaymentMethod();
+  return (
+    <TouchableOpacity
+      onPress={async () => {
+        const result = await createPaymentMethod({
+          publicToken: "public-sandbox-3607d7a1-bb38-4e1b-9102-0cef05261eff|lLLqWlmqAMI1XXA4w7ngS1vqwaBEe5iZ78P4p",
+        });
+        console.log(result);
+      }}
+    >
+      <Text children="Withdraw some fake money." />
+    </TouchableOpacity>
+  );
+}
 
 function DebitCard({ ...extras }): JSX.Element {
   const { wyre } = useWyre();
@@ -158,7 +174,7 @@ export default function App() {
           accountId="AC_M7JR6JUCDR3"
           country="US"
         />
-
+        <CreatePaymentMethod />
       </View>
     </SendWyre>
   );
