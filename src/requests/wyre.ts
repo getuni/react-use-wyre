@@ -16,7 +16,7 @@ export default function wyre({
   apiKey,
   secretKey,
   apiUrl,
-  baseUrl,
+  baseUrl = "",
   url: endpoint,
   method = "get",
   data = undefined,
