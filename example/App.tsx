@@ -50,7 +50,7 @@ function CreatePaymentMethod({ ...extras }): JSX.Element {
         //console.log(data);
       }}
     >
-      <Text children="Withdraw some fake money." />
+      <Text children="Withdraw some fake money. (Code must be uncommented!)" />
     </TouchableOpacity>
   );
 }
