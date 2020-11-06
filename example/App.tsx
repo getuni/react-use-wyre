@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
 import SendWyre, {
+  AuthenticationType,
   useWyre,
   useDebitCard,
   useApplePay,
@@ -9,8 +10,80 @@ import SendWyre, {
   useReservation,
   useWalletOrder,
   usePaymentMethod,
-} from 'react-use-wyre';
+//} from 'react-use-wyre';
+} from './lib';
+import { nanoid } from "nanoid/non-secure";
 import Constants from "expo-constants";
+
+function CreateSecretKey({
+  ...extra
+}): JSX.Element {
+  const { wyre } = useWyre();
+  const secretKey = [...Array(35)] // min 25
+    .map(e => nanoid().charAt(0)).join("");
+  return (
+    <TouchableOpacity
+      onPress={async () => {
+        const { data: { apiKey } } = await wyre({
+          url: "v2/sessions/auth/key",
+          method: "post",
+          data: { secretKey },
+        });
+        console.warn({ apiKey, secretKey });
+      }}
+    >
+      <Text children="Generate Secret Key" />
+    </TouchableOpacity>
+  );
+}
+
+function CreateSavingsAccount({ forAccountId, ...extra }): JSX.Element {
+  const { wyre } = useWyre();
+  return (
+    <TouchableOpacity
+      onPress={async () => {
+        const result = await wyre({
+          url: `v2/wallets?masqueradeAs=${forAccountId}`,
+          method: "post",
+          data: {
+            type: "SAVINGS",
+            name: nanoid(),
+            //callbackUrl: "https://your.website.io/callback",
+            notes: JSON.stringify({
+
+            }),
+          },
+        });
+        console.warn({ result });
+      }}
+    >
+      <Text children={`Create a Savings Account for ${forAccountId}`} />
+    </TouchableOpacity>
+  );
+}
+
+function CreateAccount({ onAccountCreated, ...extras }): JSX.Element {
+  const { wyre } = useWyre();
+  return (
+    <TouchableOpacity
+      onPress={async () => {
+        const { data } = await wyre({
+          url: "v3/accounts",
+          method: "post",
+          data: {
+            type: "INDIVIDUAL", // ?
+            country: "US",
+            profileFields: [],
+          },
+        });
+        onAccountCreated(data);
+      }}
+    >
+      <Text children="Create an Account" />
+    </TouchableOpacity>
+
+  );
+}
 
 function CreatePaymentMethod({ ...extras }): JSX.Element {
   const { wyre } = useWyre();
@@ -179,11 +252,12 @@ const { APP_MANIFEST: { extra } } = process.env;
 const { WYRE_API_KEY: apiKey, WYRE_SECRET_KEY: secretKey, WYRE_PARTNER_ID: partnerId } = extra;
 
 export default function App() {
+  const [createdAccountId, setCreatedAccountId] = useState(null);
   return (
     <SendWyre
+      partnerId={partnerId}
       apiKey={apiKey}
       secretKey={secretKey}
-      partnerId={partnerId}
       baseUrl={Platform.OS === "web" ? "https://cors-anywhere.herokuapp.com/" : ""}
     >
       <View style={styles.container}>
@@ -202,6 +276,11 @@ export default function App() {
           country="US"
         />
         <CreatePaymentMethod />
+        <CreateSecretKey />
+        <CreateAccount onAccountCreated={({ id }) => setCreatedAccountId(id)}/>
+        {(!!createdAccountId) && (
+          <CreateSavingsAccount forAccountId={createdAccountId}/>
+        )}
       </View>
     </SendWyre>
   );

@@ -9,6 +9,8 @@ export {
   usePaymentMethod,
 } from "./hooks";
 
+export { AuthenticationType } from "./requests";
+
 export const OrderStatus = Object.freeze({
   RUNNING_CHECKS: "RUNNING_CHECKS",
   PROCESSING: "PROCESSING",
