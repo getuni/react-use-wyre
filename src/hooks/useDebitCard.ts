@@ -11,11 +11,18 @@ export default function useDebitCard() {
       sourceCurrency,
       destCurrency,
       dest,
-      countryCode,
-      referenceId,
-      user: {firstName, lastName, email, street1, city, state, country, postalCode, phone},
+      user: {
+        firstName,
+        lastName,
+        email,
+        street1,
+        city,
+        state,
+        country,
+        postalCode,
+        phone,
+      },
       /* computed */
-      quote: {sourceAmount},
       reserve: {reservation},
       /* additional */
       debitCard,

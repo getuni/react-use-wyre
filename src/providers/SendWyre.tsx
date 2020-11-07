@@ -43,7 +43,7 @@ const SendWyre = function ({
   }
    
   const wyre = useCallback(
-    ({ url, method, data }) => makeRequest(
+    ({ url, method, data }, overrides = {}) => makeRequest(
       {
         apiKey,
         secretKey,
@@ -53,6 +53,9 @@ const SendWyre = function ({
         url,
         method,
         data,
+        // XXX: The caller can define override properties for the request signature.
+        //      e.g. you could perform a different kind of authenticationType.
+        ...overrides,
       },
     ),
     [secretKey, apiKey, apiUrl, baseUrl]

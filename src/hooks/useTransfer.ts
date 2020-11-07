@@ -7,7 +7,7 @@ export default function useTransfer() {
   const getTransfer = useCallback(
     async ({ transferId }) => {
       if (typeof transferId !== "string") {
-        return setError(new Error(`Expected String transferId, encountered ${transferId}.`));
+        throw new Error(`Expected String transferId, encountered ${transferId}.`);
       }
       const { data } = await wyre({
         url: `v3/transfers/${transferId}/track`,

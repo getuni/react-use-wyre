@@ -1,9 +1,26 @@
 import React from "react";
+import { AxiosResponse } from "axios";
 
-const defaultContext = Object.freeze({});
+export type WyreRequest = {
+  readonly [key: string]: unknown;
+};
 
-const SendWyreContext = React.createContext(defaultContext);
+export type WyreInstance = (config: WyreRequest, overrides?: WyreRequest) => Promise<AxiosResponse>;
 
-SendWyreContext.defaultContext = defaultContext;
+export type SendWyreContextValue = {
+  readonly wyre: WyreInstance;
+  readonly partnerId: string;
+};
+
+export const defaultContext = Object.freeze({
+  wyre: () => Promise.reject(new Error(`SendWyre: You must declare a SendWyre <Provider /> at the root of your application.`)),
+  partnerId: null,
+});
+
+const SendWyreContext = React.createContext<SendWyreContextValue>(
+  // XXX: Note that the actual provider will fail on this if partnerId hasn't been defined.
+  // @ts-ignore
+  defaultContext as SendWyreContextValue
+);
 
 export default SendWyreContext;

@@ -1,27 +1,30 @@
+import type { WyreInstance } from "../contexts";
+
 export type processApplePayArgs = {
-  wyre: (requestOptions: object) => Promise<object>;
-  partnerId: string;
-  ref: {
-    amount: string;
-    sourceCurrency: string;
-    destCurrency: string;
-    dest: string;
-    countryCode: string;
-    referenceId: string;
-    user: {
-      firstName: string;
-      lastName: string;
-      email: string;
-      street1: string;
-      city: string;
-      state: string;
-      country: string;
-      postalCode: string;
-      phone: string;
+  readonly wyre: WyreInstance;
+  readonly partnerId: string;
+  readonly ref: {
+    readonly amount: string;
+    readonly sourceCurrency: string;
+    readonly destCurrency: string;
+    readonly dest: string;
+    readonly countryCode: string;
+    readonly referenceId: string;
+    readonly user: {
+      readonly firstName: string;
+      readonly lastName: string;
+      readonly email: string;
+      readonly street1: string;
+      readonly city: string;
+      readonly state: string;
+      readonly country: string;
+      readonly postalCode: string;
+      readonly phone: string;
     },
-    quote: { sourceAmount: string };
-    reserve: { reservation: string };
+    readonly quote: { readonly sourceAmount: string };
+    readonly reserve: { readonly reservation: string };
   },
+  readonly applePayToken: unknown;
 };
 
 export default async function processApplePay({
@@ -32,7 +35,6 @@ export default async function processApplePay({
 }: processApplePayArgs) {
   const {
     /* specified */
-    amount,
     sourceCurrency,
     destCurrency,
     dest,
@@ -54,7 +56,7 @@ export default async function processApplePay({
     reserve: { reservation },
   } = ref;
   const addressLines = [street1, city, state];
-  const {data} = await wyre(
+  const { data } = await wyre(
     {
       url: "v3/apple-pay/process/partner",
       method: "post",

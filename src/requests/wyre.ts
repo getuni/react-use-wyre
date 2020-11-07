@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { KJUR } from "jsrsasign";
 import { typeCheck } from "type-check";
 import deepmerge from "deepmerge";
@@ -19,7 +19,7 @@ export type wyreParams = {
   readonly data: any;
 };
 
-export default function wyre({
+export default async function wyre({
   apiKey,
   secretKey,
   authenticationType: maybeAuthenticationType,
@@ -28,7 +28,7 @@ export default function wyre({
   url: endpoint,
   method = "get",
   data = undefined,
-}: wyreParams) {
+}: wyreParams): Promise<AxiosResponse> {
   if (!typeCheck("String", endpoint)) {
     throw new Error(`Expected String url, encountered ${endpoint}.`);
   }

@@ -10,79 +10,73 @@ import SendWyre, {
   useReservation,
   useWalletOrder,
   usePaymentMethod,
-//} from 'react-use-wyre';
-} from './lib';
+  useSecretKey,
+  useCreateAccount,
+  useFetchWallet,
+} from 'react-use-wyre';
 import { nanoid } from "nanoid/non-secure";
 import Constants from "expo-constants";
 
-function CreateSecretKey({
-  ...extra
-}): JSX.Element {
-  const { wyre } = useWyre();
-  const secretKey = [...Array(35)] // min 25
+// XXX: You should use "nanoid", not "nanoid/non-secure"! :)
+const generateRandomSecretKey = (): string => {
+  return [...Array(35)]
     .map(e => nanoid().charAt(0)).join("");
-  return (
-    <TouchableOpacity
-      onPress={async () => {
-        const { data: { apiKey } } = await wyre({
-          url: "v2/sessions/auth/key",
-          method: "post",
-          data: { secretKey },
-        });
-        console.warn({ apiKey, secretKey });
-      }}
-    >
-      <Text children="Generate Secret Key" />
-    </TouchableOpacity>
-  );
-}
+};
 
-function CreateSavingsAccount({ forAccountId, ...extra }): JSX.Element {
+function CreateUserControlledWallet({ ...extras }) {
   const { wyre } = useWyre();
-  return (
-    <TouchableOpacity
-      onPress={async () => {
-        const result = await wyre({
-          url: `v2/wallets?masqueradeAs=${forAccountId}`,
-          method: "post",
-          data: {
-            type: "SAVINGS",
-            name: nanoid(),
-            //callbackUrl: "https://your.website.io/callback",
-            notes: JSON.stringify({
+  const { createSecretKey } = useSecretKey();
+  const { createAccount } = useCreateAccount();
+  const { fetchWallet } = useFetchWallet();
+  useEffect(() => {
+    (async () => {
+      const secretKey = generateRandomSecretKey();
+      const { apiKey } = await createSecretKey({ secretKey });
+      console.warn({ apiKey, secretKey });
+      const { id: accountId } = await createAccount({
+        type: "INDIVIDUAL",
+        country: "US",
+        profileFields: [],
+        referrerAccountId: null,
+        subaccount: true,
+        disableEmail: true,
+      }, {
+        authenticationType: AuthenticationType.TOKEN_AUTH,
+        secretKey,
+      });
 
-            }),
-          },
-        });
-        console.warn({ result });
-      }}
-    >
-      <Text children={`Create a Savings Account for ${forAccountId}`} />
-    </TouchableOpacity>
-  );
-}
+      console.warn({ accountId });
 
-function CreateAccount({ onAccountCreated, ...extras }): JSX.Element {
-  const { wyre } = useWyre();
-  return (
-    <TouchableOpacity
-      onPress={async () => {
-        const { data } = await wyre({
-          url: "v3/accounts",
-          method: "post",
-          data: {
-            type: "INDIVIDUAL", // ?
-            country: "US",
-            profileFields: [],
-          },
-        });
-        onAccountCreated(data);
-      }}
-    >
-      <Text children="Create an Account" />
-    </TouchableOpacity>
+      // XXX: Create a savings wallet under the subaccount.
+      const { data: { id: savingsWalletId } } = await wyre({
+        url: `v2/wallets`,
+        method: "post",
+        data: {
+          type: "SAVINGS",
+          name: nanoid(),
+          //callbackUrl: "https://your.website.io/callback",
+          notes: JSON.stringify({}),
+        },
+      }, {
+        authenticationType: AuthenticationType.TOKEN_AUTH,
+        secretKey,
+      });
+      const dataAsOwner = await fetchWallet({
+        walletId: savingsWalletId,
+      }, {
+        authenticationType: AuthenticationType.TOKEN_AUTH,
+        secretKey,
+      });
 
-  );
+      console.warn({ dataAsOwner });
+
+      // XXX: Should throw.
+      const dataAsPartner = await fetchWallet({
+        walletId: savingsWalletId,
+      });
+    })();
+  }, [wyre, createSecretKey, createAccount, fetchWallet]);
+  return null;
 }
 
 function CreatePaymentMethod({ ...extras }): JSX.Element {
@@ -209,7 +203,6 @@ function QuoteTransaction({ amount, sourceCurrency, destCurrency, dest, accountI
   );
 }
 
-
 //function ApplePay() {
 //  const { makeReservation } = useReservation();
 //  const { processApplePay } = useApplePay();
@@ -252,7 +245,6 @@ const { APP_MANIFEST: { extra } } = process.env;
 const { WYRE_API_KEY: apiKey, WYRE_SECRET_KEY: secretKey, WYRE_PARTNER_ID: partnerId } = extra;
 
 export default function App() {
-  const [createdAccountId, setCreatedAccountId] = useState(null);
   return (
     <SendWyre
       partnerId={partnerId}
@@ -266,7 +258,7 @@ export default function App() {
         <DebitCard>
           <Text>Tap here to make a fake debit card transaction.</Text>
         </DebitCard>
-
+        <CreateUserControlledWallet />
         <QuoteTransaction
           amount="100.00"
           sourceCurrency="USD"
@@ -276,18 +268,10 @@ export default function App() {
           country="US"
         />
         <CreatePaymentMethod />
-        <CreateSecretKey />
-        <CreateAccount onAccountCreated={({ id }) => setCreatedAccountId(id)}/>
-        {(!!createdAccountId) && (
-          <CreateSavingsAccount forAccountId={createdAccountId}/>
-        )}
       </View>
     </SendWyre>
   );
 }
-
-//        <ApplePay />
-
 
 const styles = StyleSheet.create({
   container: {

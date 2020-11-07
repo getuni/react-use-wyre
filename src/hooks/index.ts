@@ -5,3 +5,6 @@ export { default as useApplePay } from "./useApplePay";
 export { default as useTransfer } from "./useTransfer";
 export { default as useWalletOrder } from "./useWalletOrder";
 export { default as usePaymentMethod } from "./usePaymentMethod";
+export { default as useSecretKey } from "./useSecretKey";
+export { default as useCreateAccount } from "./useCreateAccount";
+export { default as useFetchWallet } from "./useFetchWallet";

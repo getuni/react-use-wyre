@@ -13,8 +13,6 @@ export default function useReservation() {
         sourceCurrency,
         destCurrency,
         dest,
-        countryCode,
-        referenceId,
         user: {firstName, lastName, email, street1, city, state, country, postalCode, phone},
       } = opts;
       const {data: quote} = await wyre(
