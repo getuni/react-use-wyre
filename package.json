@@ -36,6 +36,9 @@
     "@babel/preset-env": "^7.11.0",
     "@babel/preset-react": "^7.10.4",
     "@babel/preset-typescript": "^7.10.4",
+    "@types/jsrsasign": "^8.0.8",
+    "@types/react": "^16.9.56",
+    "@types/type-check": "^0.3.27",
     "@typescript-eslint/eslint-plugin": "^3.8.0",
     "@typescript-eslint/parser": "^3.8.0",
     "eslint": "^7.6.0",
@@ -47,12 +50,13 @@
     "husky": "^4.2.5",
     "jest": "^26.2.2",
     "leasot": "^11.1.0",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.1"
   },
   "dependencies": {
     "axios": "^0.19.2",
     "deepmerge": "^4.2.2",
-    "jsrsasign": "^8.0.21",
-    "type-check": "^0.4.0"
+    "jsrsasign": "^8.0.21"
   }
 }

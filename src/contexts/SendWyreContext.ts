@@ -1,11 +1,18 @@
-import React from "react";
+import * as React from "react";
 import { AxiosResponse } from "axios";
 
-export type WyreRequest = {
+export type AnyObject = {
   readonly [key: string]: unknown;
 };
 
-export type WyreInstance = (config: WyreRequest, overrides?: WyreRequest) => Promise<AxiosResponse>;
+export type WyreRequest = {
+  readonly url: string;
+  readonly method: string;
+  readonly data?: AnyObject;
+  readonly headers?: AnyObject;
+};
+
+export type WyreInstance = (config: WyreRequest, overrides?: AnyObject) => Promise<AxiosResponse>;
 
 export type SendWyreContextValue = {
   readonly wyre: WyreInstance;
@@ -18,7 +25,6 @@ export const defaultContext = Object.freeze({
 });
 
 const SendWyreContext = React.createContext<SendWyreContextValue>(
-  // XXX: Note that the actual provider will fail on this if partnerId hasn't been defined.
   // @ts-ignore
   defaultContext as SendWyreContextValue
 );

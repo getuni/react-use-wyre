@@ -1,11 +1,12 @@
-import React, { useCallback } from "react";
-import { typeCheck } from "type-check";
+import * as React from "react";
 
 import { SendWyreContext } from "../contexts";
 import { wyre as makeRequest, AuthenticationType } from "../requests";
 
+const { useCallback } = React;
+
 export type SendWyreProps = {
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
   apiKey: string;
   secretKey: string;
   authenticationType: AuthenticationType;
@@ -24,40 +25,44 @@ const SendWyre = function ({
   children,
   ...extras
 }: SendWyreProps): JSX.Element {
-  if (!typeCheck("String", partnerId)) {
+  if (typeof partnerId !== "string") {
     throw new Error(
       `SendWyre: Expected String partnerId, encountered ${partnerId}.`
     );
-  } else if (!typeCheck("String", secretKey)) {
+  } else if (typeof secretKey !== "string") {
     throw new Error(
       `SendWyre: Expected String secretKey, encountered ${secretKey}.`,
     );
-    console.log("Only an apiKey has been defined; using Bearer auth.");
   }
 
   if (
     authenticationType === AuthenticationType.SECRET_KEY_SIGNATURE
-    && !typeCheck("String", apiKey)
+    && typeof apiKey !== "string"
   ) {
     throw new Error(`SendWyre: Expected String apiKey, encountered ${apiKey}.`);
   }
    
   const wyre = useCallback(
-    ({ url, method, data }, overrides = {}) => makeRequest(
-      {
-        apiKey,
-        secretKey,
-        authenticationType,
-        apiUrl,
-        baseUrl,
-        url,
-        method,
-        data,
-        // XXX: The caller can define override properties for the request signature.
-        //      e.g. you could perform a different kind of authenticationType.
-        ...overrides,
-      },
-    ),
+    ({ url, method, data }, overrides = {}) => {
+      if (!overrides || typeof overrides !== 'object') {
+        throw new Error(`Expected object overrides, encountered ${overrides} (${typeof overrides}).`);
+      }
+      return makeRequest(
+        {
+          apiKey,
+          secretKey,
+          authenticationType,
+          apiUrl,
+          baseUrl,
+          url,
+          method,
+          data,
+          // XXX: The caller can define override properties for the request signature.
+          //      e.g. you could perform a different kind of authenticationType.
+          ...overrides,
+        },
+      );
+    },
     [secretKey, apiKey, apiUrl, baseUrl]
   );
 

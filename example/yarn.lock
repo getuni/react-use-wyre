@@ -4375,11 +4375,6 @@ pouchdb-collections@^1.0.1:
   resolved "https://registry.yarnpkg.com/pouchdb-collections/-/pouchdb-collections-1.0.1.tgz#fe63a17da977611abef7cb8026cb1a9553fd8359"
   integrity sha1-/mOhfal3YRq+98uAJssalVP9g1k=
 
-prelude-ls@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
-  integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
-
 pretty-format@^23.6.0:
   version "23.6.0"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-23.6.0.tgz#5eaac8eeb6b33b987b7fe6097ea6a8a146ab5760"
@@ -4561,7 +4556,6 @@ react-use-wyre@../:
     axios "^0.19.2"
     deepmerge "^4.2.2"
     jsrsasign "^8.0.21"
-    type-check "^0.4.0"
 
 react@~16.11.0:
   version "16.11.0"
@@ -5254,13 +5248,6 @@ toidentifier@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
   integrity sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
-
-type-check@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/type-check/-/type-check-0.4.0.tgz#07b8203bfa7056c0657050e3ccd2c37730bab8f1"
-  integrity sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==
-  dependencies:
-    prelude-ls "^1.2.1"
 
 type-fest@^0.7.1:
   version "0.7.1"

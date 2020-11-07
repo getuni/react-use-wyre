@@ -7,15 +7,15 @@ export default function useReservation() {
   const { wyre, partnerId } = useWyre();
 
   const makeReservation = useCallback(
-    async ({...opts}) => {
+    async ({ ...opts }) => {
       const {
         amount,
         sourceCurrency,
         destCurrency,
         dest,
-        user: {firstName, lastName, email, street1, city, state, country, postalCode, phone},
+        user: { firstName, lastName, email, street1, city, state, country, postalCode, phone },
       } = opts;
-      const {data: quote} = await wyre(
+      const { data: quote } = await wyre(
         {
           url: "v3/orders/quote/partner",
           method: "post",
@@ -29,7 +29,7 @@ export default function useReservation() {
           },
         },
       );
-      const {data: reserve} = await wyre(
+      const { data: reserve } = await wyre(
         {
           url: "v3/orders/reserve",
           method: "post",

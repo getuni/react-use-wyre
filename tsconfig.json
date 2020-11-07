@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
-    "noEmit": true
+    "noEmit": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "lib": ["es2015"],
+    "jsx": "react"
   }
 }

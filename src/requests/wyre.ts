@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { KJUR } from "jsrsasign";
-import { typeCheck } from "type-check";
+// @ts-ignore
 import deepmerge from "deepmerge";
 
 export enum AuthenticationType {
@@ -29,7 +29,7 @@ export default async function wyre({
   method = "get",
   data = undefined,
 }: wyreParams): Promise<AxiosResponse> {
-  if (!typeCheck("String", endpoint)) {
+  if (typeof endpoint !== "string") {
     throw new Error(`Expected String url, encountered ${endpoint}.`);
   }
 
@@ -51,7 +51,6 @@ export default async function wyre({
   if (authenticationType === AuthenticationType.SECRET_KEY_SIGNATURE) {
     const mac = new KJUR.crypto.Mac({ alg: "HmacSHA256", pass: secretKey });
     mac.updateString(url + (data ? JSON.stringify(data) : ""));
-    /* request */
     return axios(deepmerge(baseProps, {
       headers: {
         "X-Api-Key": apiKey,

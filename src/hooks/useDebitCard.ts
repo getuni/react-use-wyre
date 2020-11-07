@@ -1,6 +1,11 @@
-import React, { useState, useCallback } from "react";
+import { useCallback } from "react";
 
 import { useWyre } from ".";
+
+export type AuthorizeParams = {
+  readonly sms?: string;
+  readonly card2fa?: string;
+};
 
 export default function useDebitCard() {
   const { wyre, partnerId } = useWyre();
@@ -62,12 +67,11 @@ export default function useDebitCard() {
         method: "get",
       });
 
-      // XXX: What to return?
       return Object.freeze({
         walletOrderId,
         smsNeeded,
         card2faNeeded,
-        authorize: async ({ sms, card2fa }) => {
+        authorize: async ({ sms, card2fa }: AuthorizeParams) => {
           const { data } = await wyre({
             url: "v3/debitcard/authorize/partner",
             method: "post",
