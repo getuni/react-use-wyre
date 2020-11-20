@@ -61,7 +61,7 @@ The exported [`useWyre`](./src/hooks/useWyre.ts) hook aids the rapid prototyping
 Below, we show an example of how to hit the [**Exchange Rates**](https://docs.sendwyre.com/docs/live-exchange-rates) API:
 
 ```javascript
-import { useWyre } from "react-native-wyre";
+import { useWyre } from "react-use-wyre";
 
 const { wyre } = useWyre();
 
