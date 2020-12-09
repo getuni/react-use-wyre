@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-import { useWyre } from ".";
+import useWyre from "./useWyre";
 
 export default function useCreateAccount() {
   const { wyre } = useWyre();
@@ -30,4 +30,4 @@ export default function useCreateAccount() {
     return data;
   }, []);
   return { createAccount };
-};
+}

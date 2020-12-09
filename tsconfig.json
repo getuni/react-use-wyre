@@ -1,9 +1,23 @@
 {
   "compilerOptions": {
-    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "declaration": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["es2017", "esnext"],
+    "module": "esnext",
+    "moduleResolution": "node",
     "noImplicitAny": true,
+    "noImplicitThis": true,
     "removeComments": true,
-    "lib": ["es2015"],
-    "jsx": "react"
-  }
+    "resolveJsonModule": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "strict": true,
+    "target": "esnext",
+    "jsx": "react",
+    "outDir": "dist"
+  },
+  "include": ["./src"],
+  "exclude": ["./example", "./node_modules/"]
 }

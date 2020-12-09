@@ -1,4 +1,4 @@
-import type { WyreInstance } from "../contexts";
+import type { WyreInstance } from "../types";
 
 export type processApplePayArgs = {
   readonly wyre: WyreInstance;

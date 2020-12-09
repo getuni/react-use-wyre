@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-import { useWyre } from ".";
+import useWyre from "./useWyre";
 
 export default function useReservation() {
 

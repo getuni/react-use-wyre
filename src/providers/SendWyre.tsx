@@ -1,7 +1,8 @@
 import * as React from "react";
 
 import { SendWyreContext } from "../contexts";
-import { wyre as makeRequest, AuthenticationType } from "../requests";
+import { wyre as makeRequest } from "../requests";
+import { AuthenticationType } from "../types";
 
 const { useCallback } = React;
 
@@ -31,46 +32,43 @@ const SendWyre = function ({
     );
   } else if (typeof secretKey !== "string") {
     throw new Error(
-      `SendWyre: Expected String secretKey, encountered ${secretKey}.`,
+      `SendWyre: Expected String secretKey, encountered ${secretKey}.`
     );
   }
 
   if (
-    authenticationType === AuthenticationType.SECRET_KEY_SIGNATURE
-    && typeof apiKey !== "string"
+    authenticationType === AuthenticationType.SECRET_KEY_SIGNATURE &&
+    typeof apiKey !== "string"
   ) {
     throw new Error(`SendWyre: Expected String apiKey, encountered ${apiKey}.`);
   }
-   
+
   const wyre = useCallback(
     ({ url, method, data }, overrides = {}) => {
-      if (!overrides || typeof overrides !== 'object') {
-        throw new Error(`Expected object overrides, encountered ${overrides} (${typeof overrides}).`);
+      if (!overrides || typeof overrides !== "object") {
+        throw new Error(
+          `Expected object overrides, encountered ${overrides} (${typeof overrides}).`
+        );
       }
-      return makeRequest(
-        {
-          apiKey,
-          secretKey,
-          authenticationType,
-          apiUrl,
-          baseUrl,
-          url,
-          method,
-          data,
-          // XXX: The caller can define override properties for the request signature.
-          //      e.g. you could perform a different kind of authenticationType.
-          ...overrides,
-        },
-      );
+      return makeRequest({
+        apiKey,
+        secretKey,
+        authenticationType,
+        apiUrl,
+        baseUrl,
+        url,
+        method,
+        data,
+        // XXX: The caller can define override properties for the request signature.
+        //      e.g. you could perform a different kind of authenticationType.
+        ...overrides,
+      });
     },
     [secretKey, apiKey, apiUrl, baseUrl]
   );
 
   return (
-    <SendWyreContext.Provider
-      {...extras}
-      value={{ wyre, partnerId }}
-    >
+    <SendWyreContext.Provider {...extras} value={{ wyre, partnerId }}>
       {children}
     </SendWyreContext.Provider>
   );

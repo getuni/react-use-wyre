@@ -1,6 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { StatusBar } from "expo-status-bar";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 import SendWyre, {
   AuthenticationType,
   useWyre,
@@ -13,14 +19,13 @@ import SendWyre, {
   useSecretKey,
   useCreateAccount,
   useFetchWallet,
-} from 'react-use-wyre';
+} from "react-use-wyre";
 import { nanoid } from "nanoid/non-secure";
 import Constants from "expo-constants";
 
 // XXX: You should use "nanoid", not "nanoid/non-secure"! :)
 const generateRandomSecretKey = (): string => {
-  return [...Array(35)]
-    .map(e => nanoid().charAt(0)).join("");
+  return [...Array(35)].map((e) => nanoid().charAt(0)).join("");
 };
 
 function CreateUserControlledWallet({ ...extras }) {
@@ -33,40 +38,51 @@ function CreateUserControlledWallet({ ...extras }) {
       const secretKey = generateRandomSecretKey();
       const { apiKey } = await createSecretKey({ secretKey });
       console.warn({ apiKey, secretKey });
-      const { id: accountId } = await createAccount({
-        type: "INDIVIDUAL",
-        country: "US",
-        profileFields: [],
-        referrerAccountId: null,
-        subaccount: true,
-        disableEmail: true,
-      }, {
-        authenticationType: AuthenticationType.TOKEN_AUTH,
-        secretKey,
-      });
+      const { id: accountId } = await createAccount(
+        {
+          type: "INDIVIDUAL",
+          country: "US",
+          profileFields: [],
+          referrerAccountId: null,
+          subaccount: true,
+          disableEmail: true,
+        },
+        {
+          authenticationType: AuthenticationType.TOKEN_AUTH,
+          secretKey,
+        }
+      );
 
       console.warn({ accountId });
 
       // XXX: Create a savings wallet under the subaccount.
-      const { data: { id: savingsWalletId } } = await wyre({
-        url: `v2/wallets`,
-        method: "post",
-        data: {
-          type: "SAVINGS",
-          name: nanoid(),
-          //callbackUrl: "https://your.website.io/callback",
-          notes: JSON.stringify({}),
+      const {
+        data: { id: savingsWalletId },
+      } = await wyre(
+        {
+          url: `v2/wallets`,
+          method: "post",
+          data: {
+            type: "SAVINGS",
+            name: nanoid(),
+            //callbackUrl: "https://your.website.io/callback",
+            notes: JSON.stringify({}),
+          },
         },
-      }, {
-        authenticationType: AuthenticationType.TOKEN_AUTH,
-        secretKey,
-      });
-      const dataAsOwner = await fetchWallet({
-        walletId: savingsWalletId,
-      }, {
-        authenticationType: AuthenticationType.TOKEN_AUTH,
-        secretKey,
-      });
+        {
+          authenticationType: AuthenticationType.TOKEN_AUTH,
+          secretKey,
+        }
+      );
+      const dataAsOwner = await fetchWallet(
+        {
+          walletId: savingsWalletId,
+        },
+        {
+          authenticationType: AuthenticationType.TOKEN_AUTH,
+          secretKey,
+        }
+      );
 
       console.warn({ dataAsOwner });
 
@@ -81,7 +97,11 @@ function CreateUserControlledWallet({ ...extras }) {
 
 function CreatePaymentMethod({ ...extras }): JSX.Element {
   const { wyre } = useWyre();
-  const { createPaymentMethod, listPaymentMethods, attachBlockchain } = usePaymentMethod();
+  const {
+    createPaymentMethod,
+    listPaymentMethods,
+    attachBlockchain,
+  } = usePaymentMethod();
   return (
     <TouchableOpacity
       onPress={async () => {
@@ -108,8 +128,8 @@ function CreatePaymentMethod({ ...extras }): JSX.Element {
         //    source: owner,
         //    sourceCurrency: "ETH",
         //    sourceAmount: "0.1",
-        //    dest: srn, 
-        //    destCurrency:"USD", 
+        //    dest: srn,
+        //    destCurrency:"USD",
         //    message: "Payment for DorianNakamoto@sendwyre.com",
         //    autoConfirm: false,
         //  },
@@ -132,39 +152,35 @@ function DebitCard({ ...extras }): JSX.Element {
     <TouchableOpacity
       {...extras}
       onPress={async () => {
-        const ref = await makeReservation(
-          {
-            amount: 1,
-            sourceCurrency: "USD",
-            destCurrency: "ETH",
-            dest: "ethereum:0x9E01E0E60dF079136a7a1d4ed97d709D5Fe3e341",
-            countryCode: "US",
-            referenceId: `${Math.random()}`,
-            user: {
-              firstName: "User",
-              lastName: "Surname",
-              email: "user@sendwyre.com",
-              street1: "1550 Bryant Street",
-              city: "San Francisco",
-              state: "CA",
-              country: "US",
-              postalCode: "94103",
-              phone: "+12126712234", 
-            },
+        const ref = await makeReservation({
+          amount: 1,
+          sourceCurrency: "USD",
+          destCurrency: "ETH",
+          dest: "ethereum:0x9E01E0E60dF079136a7a1d4ed97d709D5Fe3e341",
+          countryCode: "US",
+          referenceId: `${Math.random()}`,
+          user: {
+            firstName: "User",
+            lastName: "Surname",
+            email: "user@sendwyre.com",
+            street1: "1550 Bryant Street",
+            city: "San Francisco",
+            state: "CA",
+            country: "US",
+            postalCode: "94103",
+            phone: "+12126712234",
           },
-        );
+        });
         console.log("Debit card reservation is:", ref);
-        const result = await pay(
-          {
-            ...ref,
-            debitCard:{
-              number: "4111111111111111",
-              month: "01",
-              year: "2023",
-              cvv: "312",
-            },
+        const result = await pay({
+          ...ref,
+          debitCard: {
+            number: "4111111111111111",
+            month: "01",
+            year: "2023",
+            cvv: "312",
           },
-        );
+        });
         const { walletOrderId } = result;
         const { status } = await getWalletOrder(walletOrderId);
         console.log("The order status is: ", status);
@@ -173,34 +189,36 @@ function DebitCard({ ...extras }): JSX.Element {
   );
 }
 
-function QuoteTransaction({ amount, sourceCurrency, destCurrency, dest, accountId, country }) {
+function QuoteTransaction({
+  amount,
+  sourceCurrency,
+  destCurrency,
+  dest,
+  accountId,
+  country,
+}) {
   const [result, setResult] = useState(null);
-  const {wyre} = useWyre();
+  const { wyre } = useWyre();
   useEffect(
-    () => (async () => {
-      const { data } = await wyre({
-        url: "v3/orders/quote/partner",
-        method: "post",
-        data: {
-          amount,
-          sourceCurrency,
-          destCurrency,
-          dest,
-          accountId,
-          country,
-        },
-      });
-      setResult(data);
-    })() && undefined,
-    [amount, sourceCurrency, destCurrency, dest, accountId, country, setResult],
+    () =>
+      (async () => {
+        const { data } = await wyre({
+          url: "v3/orders/quote/partner",
+          method: "post",
+          data: {
+            amount,
+            sourceCurrency,
+            destCurrency,
+            dest,
+            accountId,
+            country,
+          },
+        });
+        setResult(data);
+      })() && undefined,
+    [amount, sourceCurrency, destCurrency, dest, accountId, country, setResult]
   );
-  return (
-    <View>
-      {!!result && (
-        <Text children={JSON.stringify(result)} />
-      )}
-    </View>
-  );
+  return <View>{!!result && <Text children={JSON.stringify(result)} />}</View>;
 }
 
 //function ApplePay() {
@@ -225,7 +243,7 @@ function QuoteTransaction({ amount, sourceCurrency, destCurrency, dest, accountI
 //            state: "CA",
 //            country: "US",
 //            postalCode: "94103",
-//            phone: "+12126712234", 
+//            phone: "+12126712234",
 //          },
 //        },
 //      );
@@ -240,9 +258,14 @@ function QuoteTransaction({ amount, sourceCurrency, destCurrency, dest, accountI
 //  return null;
 //}
 
-
-const { APP_MANIFEST: { extra } } = process.env;
-const { WYRE_API_KEY: apiKey, WYRE_SECRET_KEY: secretKey, WYRE_PARTNER_ID: partnerId } = extra;
+const {
+  APP_MANIFEST: { extra },
+} = process.env;
+const {
+  WYRE_API_KEY: apiKey,
+  WYRE_SECRET_KEY: secretKey,
+  WYRE_PARTNER_ID: partnerId,
+} = extra;
 
 export default function App() {
   return (
@@ -250,7 +273,9 @@ export default function App() {
       partnerId={partnerId}
       apiKey={apiKey}
       secretKey={secretKey}
-      baseUrl={Platform.OS === "web" ? "https://cors-anywhere.herokuapp.com/" : ""}
+      baseUrl={
+        Platform.OS === "web" ? "https://cors-anywhere.herokuapp.com/" : ""
+      }
     >
       <View style={styles.container}>
         <StatusBar style="auto" />
@@ -276,8 +301,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
