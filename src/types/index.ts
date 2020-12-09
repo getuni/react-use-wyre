@@ -6,14 +6,14 @@ export enum AuthenticationType {
 }
 
 export type WyreParams = {
-  readonly apiKey: string;
-  readonly secretKey: string;
+  readonly apiKey?: string;
+  readonly secretKey?: string;
   readonly authenticationType: AuthenticationType;
   readonly apiUrl: string;
-  readonly baseUrl: string;
+  readonly baseUrl?: string;
   readonly url: string;
   readonly method: string;
-  readonly data: any;
+  readonly data?: object | undefined;
 };
 
 export enum OrderStatus {
