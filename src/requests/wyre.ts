@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { KJUR } from "jsrsasign";
-import * as deepmerge from "deepmerge";
+import deepmerge from "deepmerge";
 
 import {WyreParams, AuthenticationType} from '../types';
 
