@@ -61,6 +61,6 @@
     "@types/deepmerge": "^2.2.0",
     "axios": "^0.19.2",
     "deepmerge": "^4.2.2",
-    "jsrsasign": "^8.0.21"
+    "jsrsasign": "^10.2.0"
   }
 }
